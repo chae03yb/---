@@ -1,6 +1,9 @@
 import fetch from "node-fetch";
 
-import openAPI_key from "./config.json";
+import { readFileSync } from "fs";
+// import openAPI_key from "./config.json"; // FIXME: 가져오기 오류
+
+let openAPI_key = JSON.parse(readFileSync("./config.json", "utf-8"))["openAPI_key"];
 
 class OpenAPI {
     static async getSchoolCode(school_name: string): Promise<string> {
@@ -15,11 +18,15 @@ class OpenAPI {
 
         if (data.result.code === "INFO-200")
             return "ERR_NF";
+        if (data.result.code === "ERROR-500")
+            return "ERR_SE";
         
         return data.schoolInfo[1].row[0].SD_SCHUL_CODE;
     }
 }
 
-class DataBaseIO {
+class DatabaseIO {
 
 }
+
+export { OpenAPI, DatabaseIO }
