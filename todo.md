@@ -3,9 +3,13 @@
   - 과거 급식 기록 조회
 
 # 완성됨
+  - util.js
+    - getSchoolCode()
+    - getDietInfo()
+      * 중식
 
 # 개발중
-  - util.ts/getSchoolCode(); config.json 파일 가져오기 오류 해결 필요
+  - util.js/getDietInfo(); 
 
 # 아이디어
   - 급식 메뉴 평점
