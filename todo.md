@@ -9,7 +9,7 @@
       * 중식
 
 # 개발중
-  - util.js/getDietInfo(); 
+  - util.js/getDietInfo(); 오류 수정 필요
 
 # 아이디어
   - 급식 메뉴 평점
