@@ -9,7 +9,7 @@
       * 중식
 
 # 개발중
-  - util.js/getDietInfo(); 오류 수정 필요
+  - util.js/getDietInfo(); l.73: InvalidType [Error]: 해당 시간에 급식을 제공하지 않거나 올바르지 않은 급식 시간입니다.
 
 # 아이디어
   - 급식 메뉴 평점

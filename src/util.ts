@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 
-import { openAPI_key } from "../config.json"; // FIXME: 가져오기 오류
+import { openAPI_key } from "../config.json";
 
 export class NotFoundError extends Error {};
 export class ServerError   extends Error {};
@@ -55,30 +55,38 @@ export class OpenAPI {
         }).toString();
 
         let response = await fetch("https://open.neis.go.kr/hub/mealServiceDietInfo?"+qs);
-        let data = await response.json();
+        let data     = await response.json();
 
-        console.log(JSON.stringify(data));
+        console.log(data["mealServiceDietInfo"][1]["row"].filter(item => item.MMEAL_SC_NM === "중식")[0].DDISH_NM);
 
         try {
-            let lunch  = data["mealServiceDietInfo"][1]["row"].filter(item => item.MMEAL_SC_NM === "중식")["DDISH_NM"].split("<br/>");
-            let dinner = data["mealServiceDietInfo"][1]["row"].filter(item => item.MMEAL_SC_NM === "석식")["DDISH_NM"].split("<br/>");
+            let meal_info = data["mealServiceDietInfo"][1]["row"];
+            let meal_service_types: Array<string> = [];
 
-            if (type === "중식")
-                return lunch
-            else if (type === "석식")
-                return dinner
-            else
-                throw new InvalidType("올바른 식사 시간을 입력해주세요");
+            meal_info.forEach(item => meal_service_types.push(item.MMEAL_SC_NM));
+
+            if (meal_service_types.includes(type)) 
+                return meal_info.filter(item => item.MMEAL_SC_NM === type)[0]["DDISH_NM"].split("<br/>");
+            else 
+                throw new InvalidType("해당 시간에 급식을 제공하지 않거나 올바르지 않은 급식 시간입니다.");
         }
         catch (err) {
-            if (err instanceof TypeError && data.RESULT.CODE === "INFO-200")
-                throw new NotFoundError("해당하는 데이터를 찾을 수 없습니다.");
-            else if (data.RESULT.CODE === "ERROR-290")
-                throw new InvalidKey("인증키가 유효하지 않습니다.");
-            else if (data.RESULT.CODE === "ERROR-500")
-                throw new ServerError("서버에 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-            else
-                throw new Error("알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+            console.error(err);
+            console.log(Object.keys(data).includes("mealServiceDietInfo"));
+            if (Object.keys(data).includes("mealServiceDietInfo")) {
+                if (err instanceof InvalidType)
+                    throw new InvalidType("해당 시간에 급식을 제공하지 않거나 올바르지 않은 급식 시간입니다.");
+                else
+                    throw new Error("알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+            }
+            else {
+                if (data.RESULT.CODE === "INFO-200")
+                    throw new NotFoundError("해당하는 데이터를 찾을 수 없습니다.");
+                else if (data.RESULT.CODE === "ERROR-290")
+                    throw new InvalidKey("인증키가 유효하지 않습니다.");
+                else if (data.RESULT.CODE === "ERROR-500")
+                    throw new ServerError("서버에 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+            }
         }
     }
 }

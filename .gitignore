@@ -134,4 +134,4 @@ config.json
 package-lock.json
 
 typings
-data
+response
