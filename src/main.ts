@@ -1,5 +1,8 @@
 import { Client } from "@androz2091/insta.js";
-import { OpenAPI, DatabaseIO, ServerError, NotFoundError, InvalidKey } from "./util";
+
+import { OpenAPI } from "./OpenAPI";
+import { DatabaseIO } from "./DatabaseIO";
+import { ServerError, NotFoundError, InvalidKey } from "./Error";
 
 import { username, password } from "../config.json";
 
@@ -22,44 +25,44 @@ client.on("messageCreate", msg => {
             });
     }
 
-    if (msg.content?.startsWith("gmi ")) {
-        // 중식 명령어, 석식 명령어로 분리
+    if (msg.content?.startsWith("중식")) {
         let args: Array<string> = msg.content.split(" ");
         let today: Array<string> = new Date().toJSON().split("T")[0].split("-");
 
-        let school_name       = args[1];
-        let meal_type         = args[2] === undefined ? "중식" : "석식";
-        let meal_service_date = args[3] === undefined ? 
-            today[0]+today[1]+today[2] : 
-            args[3];
-        
-        // (async () => {
-        //     try {
-        //         let school_data = await OpenAPI.getSchoolData(school_name);
-        //         let diet_info = await OpenAPI.getDietInfo(school_data, meal_service_date, meal_type);
-                
-        //         console.log("-------------------");
-        //         console.log(diet_info);
+        let school_name: string = args[1];
+        let meal_service_date: string = args[3] === undefined ? 
+            today[0]+today[1]+today[2] : args[3];
 
-        //         msg.reply(`${school_data.SCHUL_NM} ${meal_type}\n\n${diet_info.join("\n")}`);
-        //     }
-        //     catch (err) {
-        //         msg.reply(err.message);
-        //     }
-        // })();
-
-        OpenAPI.getSchoolData(school_name)
-            // FIXME: TypeError: Cannot read properties of undefined (reading 'CODE')
+            OpenAPI.getSchoolData(school_name)
             .then(res => {
-                OpenAPI.getDietInfo(res, meal_service_date, meal_type)
-                    .then(meal_info => {
-                        msg.reply(`${res.SCHUL_NM} ${meal_type}\n\n${meal_info.join("\n")}`);
-                    })
-                    .catch((err: Error) => { throw err; });
-            })
-            .catch((err: Error) => {
-                msg.reply(err.message);
-            });
+
+                OpenAPI.getDietInfo(res, meal_service_date, "중식")
+                .then(meal_info => {
+                    msg.reply(`${res.SCHUL_NM} 중식\n\n${meal_info.join("\n")}`);
+                })
+                .catch((err: Error) => msg.reply(err.message));
+
+            }).catch((err: Error) => msg.reply(err.message));
+    }
+
+    if (msg.content?.startsWith("석식")) {
+        let args: Array<string> = msg.content.split(" ");
+        let today: Array<string> = new Date().toJSON().split("T")[0].split("-");
+
+        let school_name: string = args[1];
+        let meal_service_date: string = args[3] === undefined ? 
+            today[0]+today[1]+today[2] : args[3];
+
+            OpenAPI.getSchoolData(school_name)
+            .then(res => {
+
+                OpenAPI.getDietInfo(res, meal_service_date, "석식")
+                .then(meal_info => {
+                    msg.reply(`${res.SCHUL_NM} 석식\n\n${meal_info.join("\n")}`);
+                })
+                .catch((err: Error) => msg.reply(err.message));
+
+            }).catch((err: Error) => msg.reply(err.message));
     }
 });
 
