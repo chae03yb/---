@@ -52,9 +52,18 @@ export class OpenAPI {
 
             meal_info.forEach(item => meal_service_types.push(item.MMEAL_SC_NM));
 
-            if (meal_service_types.includes(type)) 
-                return meal_info.filter(item => item.MMEAL_SC_NM === type)[0]["DDISH_NM"].split("<br/>");
-                // str.substring(0, str.indexOf("("))
+            if (meal_service_types.includes(type)) {
+                let diet: Array<string> = [];
+                
+                meal_info.filter(item => item.MMEAL_SC_NM === type)[0]["DDISH_NM"].split("<br/>").forEach(item => {
+                    if (item.indexOf("(") === -1)
+                        diet.push(item)
+                    else
+                        diet.push(item.substring(0, item.indexOf("(")));
+                });
+
+                return diet;
+            }
             else 
                 throw new InvalidType("해당 시간에 급식을 제공하지 않습니다");
         }

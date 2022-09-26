@@ -5,18 +5,17 @@
   - 사용자 학교 기억
 
 # 완성됨
-  - util.js
+  - OpenAPI.js
     - getSchoolCode()
     - getDietInfo()
-      * 중식
 
 # 개발중
-  - util.js/getDietInfo(); l.73: InvalidType [Error]: 해당 시간에 급식을 제공하지 않거나 올바르지 않은 급식 시간입니다.
+  - DatabaseIO.js
 
 # 아이디어
   - 급식 메뉴 평점
   - 주중 00시마다 급식 정보 받아와 DB에 저장
   
 # 노트
-  - 중식 명령어, 석식 명령어로 분리
+  - ~~중식 명령어, 석식 명령어로 분리~~ 완료
   - 식단에서 알레르기 정보 표시 옵션
