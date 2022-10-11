@@ -2,11 +2,20 @@ import { Client } from "@androz2091/insta.js";
 
 import { OpenAPI } from "./OpenAPI";
 import { DatabaseIO } from "./DatabaseIO";
+import { Util } from "./Util";
 import { ServerError, NotFoundError, InvalidKey } from "./Error";
 
-import { username, password } from "../config.json";
+import { 
+    INSTA,
+    DATABASE 
+} from "../config.json";
 
-const client: Client = new Client({ disableReplyPrefix: true });
+const client  : Client     = new Client({ disableReplyPrefix: true });
+const database: DatabaseIO = new DatabaseIO({
+    host: DATABASE.HOST,
+    user: DATABASE.USERNAME,
+    password: DATABASE.PASSWORD
+});
 
 client.on("connected", () => {
     console.log("bot is online");
@@ -66,4 +75,9 @@ client.on("messageCreate", msg => {
     }
 });
 
-client.login(username, password, {});
+client.login(INSTA.USERNAME, INSTA.PASSWORD, {});
+
+while (true) {
+    Util.waitUntilMidnight();
+    
+}

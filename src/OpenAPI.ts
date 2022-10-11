@@ -3,12 +3,12 @@ import fetch from "node-fetch";
 import { School } from "./Interfaces";
 import { NotFoundError, InvalidKey, InvalidType, ServerError } from "./Error";
 
-import { openAPI_key } from "../config.json";
+import { OPEN_API } from "../config.json";
 
 export class OpenAPI {
     static async getSchoolData(school_name: string): Promise<School> {
         let qs: string = new URLSearchParams({
-            KEY: openAPI_key.toString(), 
+            KEY: OPEN_API.KEY.toString(), 
             Type: "json", 
             SCHUL_NM: school_name,
         }).toString();
@@ -37,7 +37,7 @@ export class OpenAPI {
 
     static async getDietInfo(school_data: School, meal_service_date: string, type: "중식" | "석식" = "중식"): Promise<Array<String>> {
         let qs: string = new URLSearchParams({
-            KEY: openAPI_key.toString(),
+            KEY: OPEN_API.KEY.toString(),
             Type: "json",
             SD_SCHUL_CODE: school_data.SCHUL_CODE,
             ATPT_OFCDC_SC_CODE: school_data.ATPT_OFCDC_SC_CODE,
