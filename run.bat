@@ -1,0 +1,1 @@
+npx tsc; node .\out\src\main.js

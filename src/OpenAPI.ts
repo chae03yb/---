@@ -1,9 +1,13 @@
 import fetch from "node-fetch";
 
-import { School } from "./Interfaces";
-import { NotFoundError, InvalidKey, InvalidType, ServerError } from "./Error";
-
 import { OPEN_API } from "../config.json";
+import { 
+    NotFoundError, 
+    InvalidKey, 
+    InvalidType, 
+    ServerError, 
+    School 
+} from "./Definitions";
 
 export class OpenAPI {
     static async getSchoolData(school_name: string): Promise<School> {
@@ -83,5 +87,28 @@ export class OpenAPI {
                     throw new ServerError("서버에 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
             }
         }
+    }
+
+    static async getDetailInfo(school_data: School, meal_service_date: string, meal_service_types: "중식" | "석식"): Promise<Object> {
+        // 식단 정보 요청
+        // 칼로리 정보, 영양 정보, 알레르기 정보 반환
+        return {
+            "CAL": 0.0, // 칼로리 정보
+            "NTR": {
+                // 영양소 정보
+                "CRB": 0.0, // 탄수화물
+                "PRT": 0.0, // 단백질
+                "FAT": 0.0, // 지방
+                "VIT": 0.0, // 비타민
+                "THM": 0.0, // 티아민
+                "RIB": 0.0, // 리보플라빈
+                "VTC": 0.0, // 비타민 C
+                "CAL": 0.0, // 칼슘
+                "FER": 0.0  // 철분
+            },
+            "ALG": {
+                // 알레르기 정보
+            }
+        };
     }
 }
